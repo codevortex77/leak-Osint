@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    // Enable CORS so the API can be accessed from any bot or terminal
+    // Enable CORS for instant access anywhere
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
 
@@ -13,8 +13,20 @@ export default async function handler(req, res) {
     const apiUrl = `https://rootx-osint.in/?type=leakosint&key=swayam&query=${query}`;
 
     try {
-        const response = await fetch(apiUrl);
+        // ADDED HEADERS: Spoofing a real Chrome browser to bypass security blocks
+        const response = await fetch(apiUrl, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "application/json, text/plain, */*"
+            }
+        });
+        
         let data = await response.json();
+
+        // If the original API still throws its own error, return it neatly with your credit
+        if (data.error) {
+             return res.status(400).send(JSON.stringify({ error: data.error, Credit: "Swayam" }, null, 2));
+        }
 
         // Remove all unwanted metadata
         delete data.key_stats;
@@ -25,12 +37,12 @@ export default async function handler(req, res) {
         delete data.developer;
 
         // Inject your custom credit at the end of the JSON object
-        data.Credit = "Swayam";
+        data.Credit = "@RichUniversal";
 
         // Output the cleanly formatted, high-speed JSON response
         return res.status(200).send(JSON.stringify(data, null, 2));
         
     } catch (error) {
-        return res.status(500).send(JSON.stringify({ error: "Error fetching data", Credit: "Swayam" }, null, 2));
+        return res.status(500).send(JSON.stringify({ error: "Server connection failed", Credit: "Swayam" }, null, 2));
     }
 }
