@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const { query } = req.query;
 
     if (!query) {
-        return res.status(400).send(JSON.stringify({ error: "No query provided", Credit: "Swayam" }, null, 2));
+        return res.status(400).send(JSON.stringify({ error: "No query provided", Credit: "@RichUniversal" }, null, 2));
     }
 
     // Target Leak OSINT API
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
         // If the original API still throws its own error, return it neatly with your credit
         if (data.error) {
-             return res.status(400).send(JSON.stringify({ error: data.error, Credit: "Swayam" }, null, 2));
+             return res.status(400).send(JSON.stringify({ error: data.error, Credit: "@RichUniversal" }, null, 2));
         }
 
         // Remove all unwanted metadata
@@ -43,6 +43,6 @@ export default async function handler(req, res) {
         return res.status(200).send(JSON.stringify(data, null, 2));
         
     } catch (error) {
-        return res.status(500).send(JSON.stringify({ error: "Server connection failed", Credit: "Swayam" }, null, 2));
+        return res.status(500).send(JSON.stringify({ error: "Server connection failed", Credit: "@RichUniversal" }, null, 2));
     }
 }
